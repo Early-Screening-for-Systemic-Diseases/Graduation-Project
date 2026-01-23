@@ -1,6 +1,7 @@
-fastapi
-uvicorn
-torch
-torchvision
-pillow
-python-multipart
+torch==2.10.0+cpu
+torchvision==0.25.0+cpu
+fastapi==0.128.0
+uvicorn==0.40.0
+pydantic==2.12.5
+python-multipart==0.0.21
+Pillow==12.1.0

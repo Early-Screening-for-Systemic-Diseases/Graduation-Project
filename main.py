@@ -1,50 +1,69 @@
+# main.py
 from fastapi import FastAPI, File, UploadFile
+from fastapi.responses import JSONResponse
 from PIL import Image
+import io
 import torch
 import torchvision.transforms as transforms
+
+# Import your model class
 from model import DiabetesClassifier
-from torchvision import models
+from torchvision.models import mobilenet_v2
 
-# ================= LOAD MODEL =================
+app = FastAPI(title="Diabetes Detection API")
 
-# Rebuild MobileNet same as training
-base_model = models.mobilenet_v2(weights=None)
+# -------------------------------
+# Step 1 — Initialize model
+# -------------------------------
+# Use CPU-only
+device = torch.device("cpu")
+
+# Initialize base model
+base_model = mobilenet_v2(weights=None)  # CPU-friendly
 model = DiabetesClassifier(base_model)
 
-# Load weights
-model.load_state_dict(torch.load("D_model.pt", map_location="cpu"))
-
+# Load trained model
+model.load_state_dict(torch.load("models/D_model.pt", map_location=device))
+model.to(device)
 model.eval()
 
-# ================= FASTAPI =================
-app = FastAPI()
-
-# Image preprocessing (must match training)
+# -------------------------------
+# Step 2 — Image preprocessing
+# -------------------------------
 transform = transforms.Compose([
-    transforms.Resize((224, 224)),
+    transforms.Resize((224, 224)),  # make sure this matches your training
     transforms.ToTensor(),
+    transforms.Normalize(mean=[0.485, 0.456, 0.406],
+                         std=[0.229, 0.224, 0.225])
 ])
 
-# ================= API ROUTES =================
-
+# -------------------------------
+# Step 3 — API endpoints
+# -------------------------------
 @app.get("/")
 def home():
-    return {"message": "Diabetes Tongue API is running"}
+    return {"message": "Diabetes Detection API is running"}
 
 @app.post("/predict")
 async def predict(file: UploadFile = File(...)):
-    
-    image = Image.open(file.file).convert("RGB")
-    image = transform(image).unsqueeze(0)  # Add batch dimension
+    try:
+        # Read image
+        contents = await file.read()
+        image = Image.open(io.BytesIO(contents)).convert("RGB")
+        image = transform(image).unsqueeze(0)  # add batch dimension
+        image = image.to(device)
 
-    with torch.no_grad():
-        output = model(image)
-        prob = output.item()
+        # Make prediction
+        with torch.no_grad():
+            output = model(image)
+            pred = output.item()  # get scalar
+            label = "non_diabetes" if pred >= 0.5 else "diabetes"
+            confidence = float(pred) if pred >= 0.5 else float(1 - pred)
 
-    label = "non_diabetes" if prob > 0.5 else "diabetes"
+        return JSONResponse({
+            "label": label,
+            "confidence": confidence
+        })
 
-
-    return {
-        "prediction": label,
-        "probability": prob
-    }
+    except Exception as e:
+        return JSONResponse({"error": str(e)}, status_code=400)
