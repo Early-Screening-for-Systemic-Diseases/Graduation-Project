@@ -6,64 +6,66 @@ import io
 import torch
 import torchvision.transforms as transforms
 
-# Import your model class
-from model import DiabetesClassifier
-from torchvision.models import mobilenet_v2
+from model import DiabetesClassifier  # your model class
+import torchvision.models as models
 
-app = FastAPI(title="Diabetes Detection API")
+# ------------------------------
+# Initialize FastAPI app
+# ------------------------------
+app = FastAPI(
+    title="Diabetes Detection API",
+    description="Upload an image of tongue to predict Diabetes presence",
+    version="1.0"
+)
 
-# -------------------------------
-# Step 1 — Initialize model
-# -------------------------------
-# Use CPU-only
-device = torch.device("cpu")
-
-# Initialize base model
-base_model = mobilenet_v2(weights=None)  # CPU-friendly
+# ------------------------------
+# Load model on CPU
+# ------------------------------
+# Initialize base model (same as used during training)
+base_model = models.mobilenet_v2(weights=None)  # CPU only
 model = DiabetesClassifier(base_model)
 
-# Load trained model
-model.load_state_dict(torch.load("models/D_model.pt", map_location=device))
-model.to(device)
+# Load saved state dict
+model_path = "models/D_model.pt"  # ensure the file exists in repo
+model.load_state_dict(torch.load(model_path, map_location=torch.device("cpu")))
+model.to(torch.device("cpu"))
 model.eval()
 
-# -------------------------------
-# Step 2 — Image preprocessing
-# -------------------------------
+# ------------------------------
+# Image preprocessing
+# ------------------------------
 transform = transforms.Compose([
-    transforms.Resize((224, 224)),  # make sure this matches your training
+    transforms.Resize((224, 224)),
     transforms.ToTensor(),
-    transforms.Normalize(mean=[0.485, 0.456, 0.406],
+    transforms.Normalize(mean=[0.485, 0.456, 0.406], 
                          std=[0.229, 0.224, 0.225])
 ])
 
-# -------------------------------
-# Step 3 — API endpoints
-# -------------------------------
+# ------------------------------
+# Routes
+# ------------------------------
 @app.get("/")
 def home():
-    return {"message": "Diabetes Detection API is running"}
+    return {"message": "Diabetes Detection API is running!"}
 
 @app.post("/predict")
 async def predict(file: UploadFile = File(...)):
     try:
-        # Read image
+        # Read image bytes
         contents = await file.read()
         image = Image.open(io.BytesIO(contents)).convert("RGB")
+        # Apply transforms
         image = transform(image).unsqueeze(0)  # add batch dimension
-        image = image.to(device)
 
-        # Make prediction
+        # Prediction
         with torch.no_grad():
             output = model(image)
-            pred = output.item()  # get scalar
-            label = "non_diabetes" if pred >= 0.5 else "diabetes"
-            confidence = float(pred) if pred >= 0.5 else float(1 - pred)
+            prediction = output.item()
+            label = "Non-Diabetes" if prediction >= 0.5 else "Diabetes"
 
-        return JSONResponse({
-            "label": label,
-            "confidence": confidence
+        return JSONResponse(content={
+            "prediction": label,
+            "score": round(prediction, 4)
         })
-
     except Exception as e:
-        return JSONResponse({"error": str(e)}, status_code=400)
+        return JSONResponse(content={"error": str(e)}, status_code=500)
