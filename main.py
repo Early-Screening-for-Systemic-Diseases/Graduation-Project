@@ -38,36 +38,39 @@ def home():
 
 @app.post("/predict")
 async def predict(file: UploadFile = File(...)):
-    # 1. READ & CONVERT
     try:
+        # 1. Read & Process
         image_bytes = await file.read()
         image = Image.open(io.BytesIO(image_bytes)).convert("RGB")
-    except Exception:
-        return {"error": "Invalid image file. Please upload a JPEG or PNG."}
+        tensor = transform(image).unsqueeze(0)
 
-    # 2. TRANSFORM
-    # Ensure this image tensor shape becomes [1, 3, 224, 224]
-    input_tensor = transform(image).unsqueeze(0)
+        # 2. Predict (BINARY LOGIC)
+        with torch.no_grad():
+            outputs = model(tensor)
+            
+            # Use Sigmoid for 1-output models
+            # Result is a probability between 0.0 and 1.0
+            prob = torch.sigmoid(outputs).item()
 
-    # 3. PREDICT WITH PROBABILITIES
-    with torch.no_grad():
-        outputs = model(input_tensor)
+        # 3. Determine Class (Threshold usually 0.5)
+        # If prob > 0.5, it's the second class (Index 1)
+        # If prob < 0.5, it's the first class (Index 0)
         
-        # Apply Softmax to get percentages (0.0 to 1.0)
-        probabilities = torch.nn.functional.softmax(outputs, dim=1)
-        
-        # Get the top confidence and the class index
-        confidence, predicted_idx = torch.max(probabilities, 1)
+        if prob > 0.5:
+            predicted_index = 1
+            confidence = prob
+        else:
+            predicted_index = 0
+            confidence = 1 - prob # Invert it (e.g., if prob is 0.1, confidence is 90% for class 0)
 
-    # 4. DIAGNOSTIC OUTPUT
-    class_names = ["diabetes", "non_diabetes"] # 0, 1
-    
-    return {
-        "prediction": class_names[predicted_idx.item()],
-        "confidence_score": f"{confidence.item() * 100:.2f}%",
-        "raw_probabilities": {
-            "diabetes": f"{probabilities[0][0].item():.4f}",
-            "non_diabetes": f"{probabilities[0][1].item():.4f}"
-        },
-        "debug_note": "If both probs are near 0.50, your model is random guessing."
-    }
+        class_names = ["diabetes", "non_diabetes"]
+        
+        return {
+            "prediction": class_names[predicted_index],
+            "confidence_score": f"{confidence * 100:.2f}%",
+            "raw_output": prob,
+            "logic_used": "Binary Sigmoid (< 0.5 = diabetes)"
+        }
+
+    except Exception as e:
+        return {"error": str(e), "traceback": traceback.format_exc()}
