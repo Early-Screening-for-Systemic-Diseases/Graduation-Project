@@ -1,6 +1,27 @@
+import os
+import joblib
 from fastapi import FastAPI
 import pandas as pd
-import joblib
+
+# Load the large model from HuggingFace download location in Docker
+if os.path.exists("/app/diabetes_survey_model.pkl"):
+    model_path = "/app/diabetes_survey_model.pkl"
+else:
+    # Fallback for local testing
+    model_path = r"D:\Survey_T_Dataset\diabetes_survey_model.pkl"
+
+# Load the small columns file from GitHub / local repo
+columns_path = "model_columns.pkl"  # this will be copied with your code
+
+# Load the model and columns
+model = joblib.load(model_path)
+columns = joblib.load(columns_path)
+
+print(f"Model loaded from: {model_path}")
+print(f"Columns loaded from: {columns_path}")
+
+
+
 
 app = FastAPI()
 
