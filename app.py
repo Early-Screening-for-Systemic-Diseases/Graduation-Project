@@ -1,110 +1,102 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
+import torch
+import torch.nn as nn
+import torchvision.transforms as T
+import torchvision.models as models
+import cv2
 import numpy as np
 from PIL import Image
 from io import BytesIO
 import os
-from flask_cors import CORS
 
-
+# -------------------- Flask App --------------------
 app = Flask(__name__)
-
 CORS(app)
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 
+# -------------------- Device --------------------
+device = torch.device("cpu")  # Railway = CPU only
 
-app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max
+# -------------------- Model Definition --------------------
+class HbNet(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.backbone = models.resnet18(weights=models.ResNet18_Weights.DEFAULT)
+        self.backbone.fc = nn.Identity()
+        self.fc = nn.Sequential(
+            nn.Linear(512, 256),
+            nn.ReLU(),
+            nn.Dropout(0.3),
+            nn.Linear(256, 1)
+        )
 
-@app.route('/', methods=['GET'])
+    def forward(self, x):
+        feats = self.backbone(x)
+        return self.fc(feats)
+
+# -------------------- Load Model --------------------
+MODEL_PATH = "best_hb_model.pth"
+
+model = HbNet().to(device)
+model.load_state_dict(torch.load(MODEL_PATH, map_location=device))
+model.eval()
+
+print("✅ Model loaded successfully")
+
+# -------------------- Preprocessing (IDENTICAL LOGIC) --------------------
+transform = T.Compose([
+    T.ToTensor(),
+    T.Normalize(mean=[0.485, 0.456, 0.406],
+                std=[0.229, 0.224, 0.225])
+])
+
+def preprocess_image(file):
+    img = Image.open(BytesIO(file.read())).convert("RGB")
+    img = np.array(img)
+    img = cv2.resize(img, (224, 224))
+    img = transform(img)
+    return img.unsqueeze(0)
+
+# -------------------- Routes --------------------
+@app.route("/", methods=["GET"])
 def home():
     return jsonify({
         "status": "running",
-        "api": "Anemia Detection",
-        "endpoints": {
-            "POST /predict": "Upload image and get anemia prediction",
-            "GET /health": "Check API status"
-        }
+        "model": "ResNet18 Hb Regression",
+        "task": "Anemia detection from eye images"
     })
 
-@app.route('/predict', methods=['POST'])
+@app.route("/health", methods=["GET"])
+def health():
+    return jsonify({"status": "healthy"}), 200
+
+@app.route("/predict", methods=["POST"])
 def predict():
-    """Predict anemia percentage from eye image"""
+    if "file" not in request.files:
+        return jsonify({"error": "No file uploaded"}), 400
+
     try:
-        # Get file
-        if 'file' not in request.files:
-            return jsonify({"error": "No file provided"}), 400
-        
-        file = request.files['file']
-        if file.filename == '':
-            return jsonify({"error": "No file selected"}), 400
-        
-        # Read and process image
-        img = Image.open(BytesIO(file.read())).convert('RGB')
-        
-        # Resize to standard size
-        img_resized = img.resize((224, 224))
-        
-        # Calculate image statistics
-        img_array = np.array(img_resized)
-        mean_intensity = np.mean(img_array)
-        std_intensity = np.std(img_array)
-        
-        # Convert to HSV for better color analysis
-        # Using PIL HSV conversion
-        img_hsv = img_resized.convert('HSV')
-        hsv_array = np.array(img_hsv)
-        saturation = np.mean(hsv_array[:,:,1])
-        value = np.mean(hsv_array[:,:,2])
-        
-        # Calculate anemia percentage based on image properties
-        # Lower saturation and value = more pale/anemic appearance
-        normalized_saturation = saturation / 255.0
-        normalized_value = value / 255.0
-        
-        # Combine metrics to get anemia percentage
-        anemia_percentage = ((1.0 - normalized_saturation) * 50 + 
-                           (1.0 - normalized_value) * 50)
-        anemia_percentage = min(100, max(0, anemia_percentage))
-        
-        # Calculate confidence based on image quality
-        # Higher variance = clearer image = higher confidence
-        confidence = min(95, max(45, (std_intensity / 85.0) * 100))
-        
-        # Interpretation
-        interpretation = "Anemic (requires medical attention)" if anemia_percentage > 50 else "Non-anemic"
-        
+        img_tensor = preprocess_image(request.files["file"]).to(device)
+
+        with torch.no_grad():
+            hb_pred = model(img_tensor).item()
+
+        anemia = hb_pred < 12.5
+
         return jsonify({
             "status": "success",
-            "anemia_percentage": round(float(anemia_percentage), 2),
-            "confidence": round(float(confidence), 2),
-            "interpretation": interpretation,
-            "image_analysis": {
-                "mean_intensity": round(float(mean_intensity), 2),
-                "std_deviation": round(float(std_intensity), 2),
-                "saturation": round(float(saturation), 2),
-                "brightness": round(float(value), 2)
-            }
-        }), 200
-    
+            "predicted_hb": round(hb_pred, 2),
+            "anemia": bool(anemia),
+            "interpretation": "Anemic" if anemia else "Non-anemic",
+            "threshold": 12.5,
+            "note": "For research and educational purposes only"
+        })
+
     except Exception as e:
-        return jsonify({
-            "status": "error",
-            "message": str(e)
-        }), 400
+        return jsonify({"error": str(e)}), 500
 
-@app.route('/health', methods=['GET'])
-def health():
-    return jsonify({
-        "status": "healthy",
-        "service": "Anemia Detection API",
-        "version": "1.0.0"
-    }), 200
-
-if __name__ == '__main__':
-    print("\n" + "="*60)
-    print("  ANEMIA DETECTION API")
-    print("="*60)
-    port = int(os.environ.get('PORT', 5000))
-    print(f"🌐 Starting server on port {port}")
-    print("📤 POST /predict - Upload eye image")
-    print("🏥 GET /health - API status")
-    print("="*60 + "\n")
-    app.run(debug=False, host='0.0.0.0', port=port, use_reloader=False)
+# -------------------- Run --------------------
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 8080))
+    app.run(host="0.0.0.0", port=port)
