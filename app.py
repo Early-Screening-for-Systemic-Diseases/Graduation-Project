@@ -3,6 +3,9 @@ import numpy as np
 from PIL import Image
 from io import BytesIO
 import os
+from flask_cors import CORS
+
+CORS(app)
 
 app = Flask(__name__)
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max
