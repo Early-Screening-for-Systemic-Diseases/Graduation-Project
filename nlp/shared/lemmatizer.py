@@ -1,8 +1,13 @@
-# nlp/shared/lemmatizer.py
-
 import spacy
+from spacy.cli import download
 
-nlp_spacy = spacy.load("en_core_web_sm")
+# Try to load the model, download if not found
+try:
+    nlp_spacy = spacy.load("en_core_web_sm")
+except OSError:
+    download("en_core_web_sm")
+    nlp_spacy = spacy.load("en_core_web_sm")
+
 
 def lemmatize_text(text: str) -> str:
     """
