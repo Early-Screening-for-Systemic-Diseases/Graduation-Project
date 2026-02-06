@@ -1,12 +1,17 @@
-import spacy
-from spacy.cli import download
+# import spacy
+# from spacy.cli import download
 
 # Try to load the model, download if not found
+import spacy
+import subprocess
+import sys
+
 try:
     nlp_spacy = spacy.load("en_core_web_sm")
 except OSError:
-    download("en_core_web_sm")
+    subprocess.run([sys.executable, "-m", "spacy", "download", "en_core_web_sm"])
     nlp_spacy = spacy.load("en_core_web_sm")
+
 
 
 def lemmatize_text(text: str) -> str:
