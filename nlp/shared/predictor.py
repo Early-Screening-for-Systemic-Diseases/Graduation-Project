@@ -30,8 +30,39 @@ matcher = DiseaseMatcher(
 
 def predict(text: str):
     results, lexicon_flag = matcher.match_disease(text)
+
+    # Ensure we return the detailed list of results under `results`
+    detailed_results = results if isinstance(results, list) else []
+
+    # Build a compatibility mapping: disease -> { percentage, matched_symptoms }
+    results_map = {}
+    if isinstance(results, dict):
+        # older callers may receive a dict disease->score
+        for disease, score in results.items():
+            try:
+                pct = float(score)
+            except Exception:
+                pct = 0.0
+            results_map[disease] = {"percentage": pct, "matched_symptoms": []}
+    elif isinstance(detailed_results, list):
+        for r in detailed_results:
+            if not isinstance(r, dict):
+                continue
+            name = r.get("disease") or "unknown"
+            pct = r.get("percentage") if r.get("percentage") is not None else r.get("score")
+            try:
+                pct = float(pct) if pct is not None else 0.0
+            except Exception:
+                pct = 0.0
+            matched = r.get("matched_symptoms") or []
+            results_map[name] = {"percentage": pct, "matched_symptoms": list(matched)}
+    else:
+        # fallback
+        results_map = {}
+
     return {
         "text": text,
         "lexicon_matched": lexicon_flag,
-        "results": results
+        "results": detailed_results,
+        "results_map": results_map
     }
