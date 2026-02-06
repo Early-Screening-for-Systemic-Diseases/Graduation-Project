@@ -4,7 +4,7 @@
 import os
 from pathlib import Path
 import pandas as pd
-from shared.disease_matcher_full import DiseaseMatcher
+from nlp.shared.disease_matcher_full import DiseaseMatcher
 
 # -----------------------------
 # Paths
