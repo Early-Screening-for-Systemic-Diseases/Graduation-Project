@@ -3,7 +3,7 @@ uvicorn==0.40.0
 pandas==2.0.3
 numpy==1.26.4
 sentence-transformers==5.2.2
-torch==2.10.0+cpu
+torch==2.10.0
 spacy==3.8.11
 ftfy==6.1.1
 emoji==2.3.0
