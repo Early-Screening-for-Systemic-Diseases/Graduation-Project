@@ -2,12 +2,10 @@ fastapi==0.128.2
 uvicorn==0.40.0
 pandas==2.0.3
 numpy==1.26.4
-sentence-transformers==5.2.2
 torch==2.10.0
+sentence-transformers==5.2.2
 spacy==3.8.11
-ftfy==6.1.1
-emoji==2.3.0
-unidecode==1.3.8
-contractions==0.1.73
-scikit-learn==1.2.2
-transformers==5.0.0
+ftfy
+emoji
+unidecode
+contractions
