@@ -5,7 +5,8 @@ from PIL import Image
 import torch
 import torchvision.transforms as transforms
 from torchvision import models
-from DIabetes_image.model import DiabetesClassifier
+from model import DiabetesClassifier
+
 
 app = FastAPI()
 
