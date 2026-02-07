@@ -1,0 +1,11 @@
+fastapi==0.128.2
+uvicorn==0.40.0
+pandas==2.0.3
+numpy==1.26.4
+onnxruntime
+transformers
+spacy==3.8.11
+ftfy
+emoji
+unidecode
+contractions
