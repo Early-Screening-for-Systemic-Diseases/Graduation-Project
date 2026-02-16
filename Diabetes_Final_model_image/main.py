@@ -12,7 +12,7 @@ app = FastAPI()
 # -----------------------------
 # Load model once at startup
 # -----------------------------
-MODEL_PATH = r"C:\Users\gigabite\Graduation-Project\Diabetes_Final_model\model.weights.h5"
+MODEL_PATH = "best_diabetes_model"
 model = load_model(MODEL_PATH)
 
 # -----------------------------
