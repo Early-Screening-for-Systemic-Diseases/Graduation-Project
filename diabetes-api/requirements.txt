@@ -1,6 +1,14 @@
 fastapi==0.103.2
 uvicorn==0.23.2
 tensorflow-cpu==2.19.1
+numpy>=1.26.0,<2.0.0
 opencv-python-headless==4.9.0.80
-numpy==1.24.3
 python-multipart==0.0.6
+typing-extensions>=4.5.0
+pydantic!=1.8,!=1.8.1,!=2.0.0,!=2.0.1,!=2.1.0,<3.0.0,>=1.7.4
+starlette<0.28.0,>=0.27.0
+anyio<4.0.0,>=3.7.1
+h11>=0.8
+click>=7.0
+h5py>=3.11.0
+keras>=3.5.0
