@@ -4,6 +4,7 @@ import cv2
 from app.model_loader import model
 from app.preprocessing import TonguePreprocessor
 
+
 app = FastAPI(title="Diabetes Image Prediction API")
 
 processor = TonguePreprocessor()
