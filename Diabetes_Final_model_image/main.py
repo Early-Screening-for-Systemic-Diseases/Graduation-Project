@@ -6,17 +6,24 @@ import tensorflow as tf
 from tensorflow.keras.models import load_model
 from tensorflow.keras.applications.mobilenet_v2 import preprocess_input
 import io
+import os
 
 app = FastAPI()
 
 # -----------------------------
-# Load model once at startup
+# Load model at startup (SAFE FOR RAILWAY)
 # -----------------------------
-MODEL_PATH = "best_diabetes_model"
-model = load_model(MODEL_PATH)
+model = None
+
+@app.on_event("startup")
+def load_my_model():
+    global model
+    MODEL_PATH = "best_diabetes_model"
+    model = load_model(MODEL_PATH)
+    print("✅ Model loaded successfully")
 
 # -----------------------------
-# Class Mapping (EDIT IF NEEDED)
+# Class Mapping
 # -----------------------------
 CLASS_MAP = {
     1: "Non-Diabetic",
@@ -80,6 +87,9 @@ processor = TonguePreprocessor()
 # -----------------------------
 @app.post("/predict")
 async def predict(file: UploadFile = File(...)):
+    if model is None:
+        return {"error": "Model not loaded"}
+
     contents = await file.read()
     image = Image.open(io.BytesIO(contents)).convert("RGB")
     image = np.array(image)
