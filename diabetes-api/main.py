@@ -1,8 +1,9 @@
 from fastapi import FastAPI, UploadFile, File
 import numpy as np
 import cv2
-from app.model_loader import model
-from app.preprocessing import TonguePreprocessor
+from model_loader import model
+from preprocessing import TonguePreprocessor
+
 
 
 app = FastAPI(title="Diabetes Image Prediction API")
