@@ -2,11 +2,9 @@ from fastapi import FastAPI, File, UploadFile
 import numpy as np
 import cv2
 from PIL import Image
-import tensorflow as tf
-from tensorflow.keras.models import load_model
+from tensorflow.keras.models import model_from_json
 from tensorflow.keras.applications.mobilenet_v2 import preprocess_input
 import io
-import os
 
 app = FastAPI()
 
@@ -18,8 +16,13 @@ model = None
 @app.on_event("startup")
 def load_my_model():
     global model
-    MODEL_PATH = "model.weights.h5"
-    model = load_model(MODEL_PATH)
+    # 1️⃣ Load model architecture from config.json
+    with open("config.json", "r") as f:
+        model_config = f.read()
+    model = model_from_json(model_config)
+
+    # 2️⃣ Load trained weights from model.weights.h5
+    model.load_weights("model.weights.h5")
     print("✅ Model loaded successfully")
 
 # -----------------------------
