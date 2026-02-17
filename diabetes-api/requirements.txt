@@ -1,6 +1,6 @@
-fastapi==0.129.0
-uvicorn==0.41.0
+fastapi==0.103.2
+uvicorn==0.23.2
 tensorflow-cpu==2.13.0
 opencv-python-headless==4.9.0.80
 numpy==1.24.3
-python-multipart==0.0.9
+python-multipart==0.0.6
