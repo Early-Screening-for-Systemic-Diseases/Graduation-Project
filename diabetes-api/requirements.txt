@@ -1,6 +1,6 @@
 fastapi==0.103.2
 uvicorn==0.23.2
-tensorflow-cpu==2.15.0
+tensorflow-cpu==2.19.1
 opencv-python-headless==4.9.0.80
 numpy==1.24.3
 python-multipart==0.0.6
