@@ -1,1 +1,1 @@
-web: bash -lc "cd questionnaire_diabetes && uvicorn app:app --host 0.0.0.0 --port $PORT"
+web: uvicorn questionnaire_diabetes.app:app --host 0.0.0.0 --port $PORT
