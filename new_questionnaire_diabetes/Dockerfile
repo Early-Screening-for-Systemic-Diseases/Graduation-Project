@@ -1,15 +1,15 @@
-# 1️⃣ Base image
-FROM python:3.9-slim
+# Use Python 3.10
+FROM python:3.10-slim
 
-# 2️⃣ Set working directory
+# Set working directory
 WORKDIR /app
 
-# 3️⃣ Copy requirements and install
+# Copy requirements and install
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# 4️⃣ Copy all project files (including .pkl and app.py)
+# Copy all project files (including your .pkl model)
 COPY . .
 
-# 5️⃣ Start FastAPI
+# Start FastAPI
 CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
