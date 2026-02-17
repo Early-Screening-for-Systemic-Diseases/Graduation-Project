@@ -18,7 +18,7 @@ model = None
 @app.on_event("startup")
 def load_my_model():
     global model
-    MODEL_PATH = "best_diabetes_model"
+    MODEL_PATH = "model.weights.h5"
     model = load_model(MODEL_PATH)
     print("✅ Model loaded successfully")
 
