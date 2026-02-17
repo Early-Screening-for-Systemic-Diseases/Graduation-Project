@@ -18,16 +18,24 @@ class TonguePreprocessor:
         img = np.array(img).astype('uint8')
         img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
 
+        # Shadow removal
         img = self.remove_shadows(img)
 
-        lab = cv2.cvtColor(img, cv2.COLOR_BGR2LAB)
+        # Convert to float for color correction
+        lab = cv2.cvtColor(img, cv2.COLOR_BGR2LAB).astype('float32')
+
         avg_a = np.average(lab[:, :, 1])
         avg_b = np.average(lab[:, :, 2])
         lab[:, :, 1] -= ((avg_a - 128) * (lab[:, :, 0] / 255.0) * 1.1)
         lab[:, :, 2] -= ((avg_b - 128) * (lab[:, :, 0] / 255.0) * 1.1)
+
+        # Clip values and convert back to uint8
+        lab = np.clip(lab, 0, 255).astype('uint8')
         img = cv2.cvtColor(lab, cv2.COLOR_LAB2BGR)
 
+        # segmentation step...
         hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+
         lower1 = np.array([0, 40, 50]); upper1 = np.array([20, 255, 255])
         lower2 = np.array([160, 40, 50]); upper2 = np.array([180, 255, 255])
         mask = cv2.inRange(hsv, lower1, upper1) + cv2.inRange(hsv, lower2, upper2)
