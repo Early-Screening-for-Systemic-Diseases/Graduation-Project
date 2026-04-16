@@ -16,6 +16,7 @@ DATA_DIR = BASE_DIR / "data"
 lexicon_path  = DATA_DIR / "lexicon.csv"
 diabetes_path = DATA_DIR / "diabetes_symptoms.csv"
 anemia_path   = DATA_DIR / "anemia_symptoms.csv"
+skincancer_path = DATA_DIR / "skincancer_symptoms.csv"  # new skin cancer dataset
 
 # -----------------------------
 # Initialize Matcher
@@ -24,6 +25,7 @@ matcher = DiseaseMatcher(
     lexicon_path=str(lexicon_path),
     diabetes_path=str(diabetes_path),
     anemia_path=str(anemia_path),
+    skincancer_path=str(skincancer_path),
     semantic_model_name="all-MiniLM-L6-v2",
     semantic_threshold=0.55
 )

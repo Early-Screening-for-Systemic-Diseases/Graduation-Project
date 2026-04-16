@@ -17,9 +17,9 @@ import numpy as np
 def normalize_symptom(s: str) -> str:
     return s.strip().lower()
 
-def load_disease_symptoms(diabetes_df, anemia_df):
+def load_disease_symptoms(diabetes_df, anemia_df, skincancer_df):
     disease_symptoms = {}
-    for df in [diabetes_df, anemia_df]:
+    for df in [diabetes_df, anemia_df, skincancer_df]:
         for _, row in df.iterrows():
             disease = row["disease"].strip().lower()
             symptoms = {normalize_symptom(s) for s in row[1:] if pd.notna(s)}
@@ -143,11 +143,13 @@ class SemanticMatcher:
 # 3️⃣ Full Disease Matcher
 # -----------------------------
 class DiseaseMatcher:
-    def __init__(self, lexicon_path, diabetes_path, anemia_path, semantic_model_name="all-MiniLM-L6-v2", semantic_threshold=0.55):
+    def __init__(self, lexicon_path, diabetes_path, anemia_path, skincancer_path, semantic_model_name="all-MiniLM-L6-v2", semantic_threshold=0.55):
         # Paths
         self.lexicon_path = lexicon_path
         self.diabetes_path = diabetes_path
         self.anemia_path = anemia_path
+        self.skincancer_path = skincancer_path
+
 
         # Load lexicon
         self.lexicon = load_lexicon(str(self.lexicon_path))
@@ -155,7 +157,8 @@ class DiseaseMatcher:
         # Load disease CSVs
         diabetes_df = pd.read_csv(self.diabetes_path)
         anemia_df   = pd.read_csv(self.anemia_path)
-        self.disease_symptoms = load_disease_symptoms(diabetes_df, anemia_df)
+        skincancer_df = pd.read_csv(self.skincancer_path)
+        self.disease_symptoms = load_disease_symptoms(diabetes_df, anemia_df, skincancer_df)
 
         # Semantic matcher (uses local ONNX directory by default)
         # Forward semantic_model_name (if provided) for compatibility
