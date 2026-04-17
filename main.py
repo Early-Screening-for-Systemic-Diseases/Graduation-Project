@@ -13,14 +13,10 @@ MODEL_PATH = "final_model.keras"
 if not os.path.exists(MODEL_PATH):
     raise FileNotFoundError(f"Model file not found: {MODEL_PATH}")
 
-# Try standalone Keras first if available, fallback to tf.keras
-try:
-    import keras as standalone_keras
-    load_model = standalone_keras.models.load_model
-    print('Using standalone keras for model loading')
-except ImportError:
-    load_model = keras.models.load_model
-    print('Using tensorflow.keras for model loading')
+# ------------------ MODEL LOADING ------------------
+from tensorflow.keras.models import load_model
+
+print("Using tf.keras for model loading")
 
 model = load_model(MODEL_PATH, compile=False)
 
