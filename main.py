@@ -6,6 +6,9 @@ from PIL import Image
 import tensorflow as tf
 from tensorflow.keras.models import load_model
 
+from tensorflow import keras
+
+
 app = FastAPI(title="Skin Cancer Classification API")
 
 # ------------------ LOAD MODEL ------------------
@@ -63,7 +66,7 @@ async def predict(file: UploadFile = File(...)):
         img_batch = tf.expand_dims(img_processed, axis=0)
         
         # Predict
-        logits = model(img_batch, training=False)
+        logits = model(img_batch)
         probabilities = tf.nn.softmax(logits).numpy()[0]
         predicted_class_idx = int(tf.argmax(logits[0]))
         predicted_class = INDEX_TO_CLASS[predicted_class_idx]
