@@ -7,7 +7,7 @@ from nlp.shared.symptom_matcher import match_symptoms
 from nlp.shared.preprocessing import clean_text
 from nlp.shared.lemmatizer import lemmatize_text
 
-# Semantic Matching (SBERT or Zero-Shot)
+# Semantic Matching (SBERT))
 from nlp.shared.semantic_embedder_onnx import ONNXEmbedder
 import numpy as np
 
