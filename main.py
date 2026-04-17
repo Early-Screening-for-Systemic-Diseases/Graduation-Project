@@ -12,7 +12,7 @@ from tensorflow import keras
 app = FastAPI(title="Skin Cancer Classification API")
 
 # ------------------ LOAD MODEL ------------------
-MODEL_PATH = "final_model_tf.keras"
+MODEL_PATH = "best_model.h5"
 if not os.path.exists(MODEL_PATH):
     raise FileNotFoundError(f"Model file not found: {MODEL_PATH}")
 
