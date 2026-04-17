@@ -5,7 +5,6 @@ from fastapi import FastAPI, UploadFile, File
 from PIL import Image
 import tensorflow as tf
 from tensorflow import keras
-from tensorflow.keras.applications import EfficientNetB0
 
 app = FastAPI(title="Skin Cancer Classification API")
 
@@ -14,9 +13,16 @@ MODEL_PATH = "final_model.keras"
 if not os.path.exists(MODEL_PATH):
     raise FileNotFoundError(f"Model file not found: {MODEL_PATH}")
 
-# Ensure EfficientNet class is registered before loading
-_ = EfficientNetB0
-model = keras.models.load_model(MODEL_PATH, compile=False)
+# Try standalone Keras first if available, fallback to tf.keras
+try:
+    import keras as standalone_keras
+    load_model = standalone_keras.models.load_model
+    print('Using standalone keras for model loading')
+except ImportError:
+    load_model = keras.models.load_model
+    print('Using tensorflow.keras for model loading')
+
+model = load_model(MODEL_PATH, compile=False)
 
 # ------------------ CLASS MAPPING ------------------
 INDEX_TO_CLASS = {0: "benign", 1: "malignant", 2: "melanoma"}

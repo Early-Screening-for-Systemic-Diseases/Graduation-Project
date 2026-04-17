@@ -3,4 +3,5 @@ uvicorn==0.27.1
 pillow==10.4.0
 python-multipart==0.0.9
 tensorflow==2.15.1
+keras==2.15.1
 numpy==1.24.4
