@@ -19,3 +19,6 @@ test_image.png
 *.pth
 *.h5
 *.pt
+
+# Temporary virtual environments
+.venv_keras3/
