@@ -4,7 +4,8 @@ import numpy as np
 from fastapi import FastAPI, UploadFile, File
 from PIL import Image
 import tensorflow as tf
-from tensorflow import keras
+import keras
+from keras.models import load_model
 
 app = FastAPI(title="Skin Cancer Classification API")
 
@@ -14,10 +15,7 @@ if not os.path.exists(MODEL_PATH):
     raise FileNotFoundError(f"Model file not found: {MODEL_PATH}")
 
 # ------------------ MODEL LOADING ------------------
-from tensorflow.keras.models import load_model
-
-print("Using tf.keras for model loading")
-
+print("Using standalone keras for model loading")
 model = load_model(MODEL_PATH, compile=False)
 
 # ------------------ CLASS MAPPING ------------------
@@ -44,7 +42,7 @@ def preprocess_image(image_array, target_size=224):
     image = image * 255.0
     
     # Apply EfficientNet preprocessing
-    image = tf.keras.applications.efficientnet.preprocess_input(image)
+    image = keras.applications.efficientnet.preprocess_input(image)
     
     return image
 
