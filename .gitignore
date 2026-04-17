@@ -17,7 +17,6 @@ test_image.png
 
 # Model files
 *.pth
-*.h5
 *.pt
 
 # Temporary virtual environments
