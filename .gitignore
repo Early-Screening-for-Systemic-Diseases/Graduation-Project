@@ -14,3 +14,9 @@ dist/
 build/
 .env
 test_image.png
+
+# Model files
+*.pth
+*.keras
+*.h5
+*.pt

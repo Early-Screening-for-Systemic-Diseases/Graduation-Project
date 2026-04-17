@@ -1,52 +1,77 @@
 import io
-import torch
+import numpy as np
 from fastapi import FastAPI, UploadFile, File
 from PIL import Image
-import torchvision.transforms as T
-from model import HbNet
+import tensorflow as tf
+from tensorflow import keras
 
 app = FastAPI(title="Anemia Detection API")
 
-# ------------------ DEVICE ------------------
-device = torch.device("cpu")
-
 # ------------------ LOAD MODEL ------------------
-model = HbNet()
-model.load_state_dict(
-    torch.load("best_hb_model.pth", map_location=device)
-)
-model.to(device)
-model.eval()
+model = keras.models.load_model("final_model.keras")
 
-# ------------------ TRANSFORM (MATCH TRAINING) ------------------
-transform = T.Compose([
-    T.Resize((224, 224)),
-    T.ToTensor(),
-    T.Normalize(
-        mean=[0.485, 0.456, 0.406],
-        std=[0.229, 0.224, 0.225]
-    )
-])
+# ------------------ CLASS MAPPING ------------------
+INDEX_TO_CLASS = {0: "benign", 1: "malignant", 2: "melanoma"}
 
-# ------------------ UTILS ------------------
-def anemia_from_hb(hb):
-    return "anemic" if hb < 12.5 else "non_anemic"
+# ------------------ IMAGE PREPROCESSING ------------------
+def preprocess_image(image_array, target_size=224):
+    """Preprocess image to match training pipeline."""
+    # Resize with crop-or-pad to target size
+    h, w = image_array.shape[:2]
+    scale = target_size / min(h, w)
+    new_h = int(np.ceil(h * scale))
+    new_w = int(np.ceil(w * scale))
+    image = tf.image.resize(image_array, [new_h, new_w], method="bilinear")
+    image = tf.image.resize_with_crop_or_pad(image, target_size, target_size)
+    
+    # Convert to [0, 1]
+    if image.dtype != tf.float32:
+        image = tf.cast(image, tf.float32)
+    if tf.reduce_max(image) > 1.0:
+        image = image / 255.0
+    
+    # Scale to [0, 255] for EfficientNet preprocessing
+    image = image * 255.0
+    
+    # Apply EfficientNet preprocessing
+    image = tf.keras.applications.efficientnet.preprocess_input(image)
+    
+    return image
 
-# ------------------ ENDPOINT ------------------
+# ------------------ ENDPOINTS ------------------
 @app.post("/predict")
 async def predict(file: UploadFile = File(...)):
-    image_bytes = await file.read()
-    img = Image.open(io.BytesIO(image_bytes)).convert("RGB")
-
-    img_tensor = transform(img).unsqueeze(0).to(device)
-
-    with torch.no_grad():
-        hb_pred = model(img_tensor).item()
-
-    return {
-        "hb_value": round(hb_pred, 2),
-        "anemia_status": anemia_from_hb(hb_pred)
-    }
+    """Predict dermoscopic class from image."""
+    try:
+        image_bytes = await file.read()
+        img = Image.open(io.BytesIO(image_bytes)).convert("RGB")
+        
+        # Convert to numpy array
+        img_array = np.array(img)
+        
+        # Preprocess
+        img_processed = preprocess_image(img_array)
+        
+        # Add batch dimension
+        img_batch = tf.expand_dims(img_processed, axis=0)
+        
+        # Predict
+        logits = model(img_batch, training=False)
+        probabilities = tf.nn.softmax(logits).numpy()[0]
+        predicted_class_idx = int(tf.argmax(logits[0]))
+        predicted_class = INDEX_TO_CLASS[predicted_class_idx]
+        confidence = float(probabilities[predicted_class_idx])
+        
+        return {
+            "predicted_class": predicted_class,
+            "confidence": round(confidence, 4),
+            "all_probabilities": {
+                INDEX_TO_CLASS[i]: round(float(prob), 4) 
+                for i, prob in enumerate(probabilities)
+            }
+        }
+    except Exception as e:
+        return {"error": str(e)}
 
 # ------------------ HEALTH ------------------
 @app.get("/health")
