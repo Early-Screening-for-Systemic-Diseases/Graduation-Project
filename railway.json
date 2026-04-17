@@ -1,8 +1,0 @@
-{
-  "build": {
-    "builder": "heroku.buildpacks"
-  },
-  "deploy": {
-    "numReplicas": 1
-  }
-}
