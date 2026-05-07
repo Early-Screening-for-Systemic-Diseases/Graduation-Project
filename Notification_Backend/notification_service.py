@@ -26,24 +26,37 @@ def save_notification(user_id: str, title: str, body: str):
 # 🔹 Core send function
 def send_notification_to_user(user_id: str, title: str, body: str):
 
+    print("🔥 SENDING NOTIFICATION")
+
     fcm_token = get_user_token(user_id)
 
+    print("📱 TOKEN:", fcm_token)
+
     if not fcm_token:
+        print("❌ NO TOKEN FOUND")
         return {"error": "No FCM token found"}
 
-    message = messaging.Message(
-        notification=messaging.Notification(
-            title=title,
-            body=body
-        ),
-        token=fcm_token
-    )
+    try:
 
-    response = messaging.send(message)
+        message = messaging.Message(
+            notification=messaging.Notification(
+                title=title,
+                body=body
+            ),
+            token=fcm_token
+        )
 
-    save_notification(user_id, title, body)
+        response = messaging.send(message)
 
-    return {"status": "sent", "response": response}
+        print("✅ FCM RESPONSE:", response)
+
+        save_notification(user_id, title, body)
+
+        return {"status": "sent", "response": response}
+
+    except Exception as e:
+        print("❌ FCM ERROR:", str(e))
+        return {"error": str(e)}
 
 
 # 🔹 Chat notification

@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from datetime import datetime
 from firebase_config import db
 from notification_service import notify_chat, notify_feedback
+from pydantic import BaseModel
 
 app = FastAPI(title="Notification System")
 
@@ -15,24 +16,47 @@ def root():
 # =========================
 # 🟢 CHAT SYSTEM
 # =========================
+class MessageRequest(BaseModel):
+    chat_id: str
+    sender_id: str
+    receiver_id: str
+    sender_name: str
+    message: str
+
+
 @app.post("/send-message")
-def send_message(sender_id: str, receiver_id: str, sender_name: str, text: str):
+def send_message(data: MessageRequest):
 
-    # Save message
-    db.collection("messages").add({
-        "senderId": sender_id,
-        "receiverId": receiver_id,
-        "senderName": sender_name,
-        "text": text,
-        "timestamp": datetime.utcnow()
-    })
+    try:
 
-    # Send notification
-    notify_chat(receiver_id, sender_name, text)
+        # Save inside:
+        # chats/{chat_id}/messages/{message_id}
 
-    return {"status": "message sent + notification triggered"}
+        db.collection("chats") \
+          .document(data.chat_id) \
+          .collection("messages") \
+          .add({
+              "senderId": data.sender_id,
+              "receiverId": data.receiver_id,
+              "senderName": data.sender_name,
+              "text": data.message,
+              "timestamp": datetime.utcnow()
+          })
 
+        print("✅ MESSAGE SAVED IN CORRECT CHAT ROOM")
 
+        # Trigger notification
+        notify_chat(
+            data.receiver_id,
+            data.sender_name,
+            data.message
+        )
+
+        return {"status": "message sent successfully"}
+
+    except Exception as e:
+        print("❌ ERROR:", str(e))
+        return {"error": str(e)}
 # =========================
 # 🟢 FEEDBACK SYSTEM
 # =========================
@@ -61,3 +85,5 @@ def add_feedback(patient_id: str, doctor_id: str, feedback: str):
     notify_feedback(patient_id)
 
     return {"status": "feedback added + notification sent"}
+
+
