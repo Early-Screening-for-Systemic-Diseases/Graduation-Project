@@ -1,0 +1,7 @@
+{
+  "C": 1.0,
+  "best_threshold": 0.3,
+  "best_screening_score": 0.9349969676983108,
+  "n_features": 34,
+  "model_type": "LogisticRegression_L2"
+}

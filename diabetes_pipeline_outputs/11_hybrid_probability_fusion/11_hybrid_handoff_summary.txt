@@ -1,0 +1,24 @@
+FILE 11 HANDOFF — HYBRID PROBABILITY FUSION
+Status: PASS
+Model: Logistic Regression L2, C=1.0
+Features: CNN probability + 33 handcrafted tongue features
+CNN base: lighting-robust CNN (best_segmented_lighting_robust_model.pth)
+CLAHE applied before CNN probability generation: YES
+CLAHE-based handcrafted features used: YES
+QC features excluded: YES
+Scaler fit on train only: YES
+Threshold selected on validation only: YES
+Test threshold tuning: NO
+Scaler: fit on train only
+Threshold: 0.3 (selected on val)
+
+Test metrics at selected threshold 0.3:
+  Recall: 0.9581, FNR: 0.0419
+  Specificity: 0.8680
+  PPV: 0.8879, NPV: 0.9500
+  F1: 0.9217, Balanced Acc: 0.9131
+  Accuracy: 0.9150, Brier: 0.0621
+  ROC AUC: 0.9702, PR AUC: 0.9699
+
+No threshold tuning on test.
+Proceed to File 13 for comparison with CNN-only.

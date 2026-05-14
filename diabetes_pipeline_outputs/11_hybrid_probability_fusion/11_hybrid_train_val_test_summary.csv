@@ -1,0 +1,4 @@
+split,count,diabetes
+train,1930,961
+val,408,199
+test,412,215

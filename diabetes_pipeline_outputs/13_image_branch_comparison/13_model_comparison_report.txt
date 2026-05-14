@@ -1,0 +1,22 @@
+IMAGE BRANCH COMPARISON REPORT
+
+           metric  LR-CNN-only (lighting-robust)  Hybrid-LR    diff
+  diabetes_recall                       0.920930   0.958140  0.0372
+              fnr                       0.079070   0.041860 -0.0372
+      specificity                       0.883249   0.868020 -0.0152
+              ppv                       0.895928   0.887931 -0.0080
+              npv                       0.910995   0.950000  0.0390
+               f1                       0.908257   0.921700  0.0134
+balanced_accuracy                       0.902089   0.913080  0.0110
+         accuracy                       0.902913   0.915049  0.0121
+            brier                       0.081027   0.062124 -0.0189
+          roc_auc                       0.960076   0.970228  0.0102
+           pr_auc                       0.962433   0.969894  0.0075
+
+DECISION: Hybrid model is at least as good as Lighting-robust CNN-only baseline. Consider adopting hybrid.
+Bootstrap CIs available. Check overlap before claiming improvement.
+
+IMPORTANT:
+- Do not claim improvement if CIs overlap heavily.
+- This comparison uses the same locked test set.
+- No threshold tuning on test was performed.

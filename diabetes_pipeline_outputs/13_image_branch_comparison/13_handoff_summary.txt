@@ -1,0 +1,5 @@
+FILE 13 HANDOFF
+Status: PASS
+Models compared: ['LR-CNN-only (lighting-robust)', 'Hybrid-LR']
+Hybrid model is at least as good as Lighting-robust CNN-only baseline. Consider adopting hybrid.
+Bootstrap CIs available. Check overlap before claiming improvement.

@@ -1,0 +1,13 @@
+FILE 10 HANDOFF — HANDCRAFTED FEATURE EXTRACTION
+Status: PASS
+Manifest: D:\DIABETES\diabetes_pipeline_outputs\03_segmented_export_manifest.csv
+Features extracted: 2750
+Failed: 0
+Model features: 33
+QC features: 6 (NOT for model input)
+Splits: {'test': 412, 'train': 1930, 'val': 408}
+CLAHE used for handcrafted model features: YES
+QC features excluded from classifier: YES
+Segmentation geometry excluded from classifier: YES
+Color from tongue pixels only: YES
+Texture from eroded inner mask: YES

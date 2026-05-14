@@ -1,0 +1,10 @@
+final_split,count,final_label
+test,412,
+train,1930,
+val,408,
+test,215,diabetes
+test,197,non_diabetes
+train,961,diabetes
+train,969,non_diabetes
+val,199,diabetes
+val,209,non_diabetes

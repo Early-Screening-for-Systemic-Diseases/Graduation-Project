@@ -1,0 +1,8 @@
+[
+  "qc_mask_foreground_ratio",
+  "qc_bbox_area_ratio",
+  "qc_edge_touch",
+  "qc_large_mask",
+  "qc_small_mask",
+  "qc_blur_score"
+]
