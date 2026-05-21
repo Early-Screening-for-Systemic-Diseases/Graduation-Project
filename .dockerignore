@@ -1,0 +1,33 @@
+.git
+.gitignore
+*.ipynb
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.env
+.venv
+
+# Notebook test images
+PIPELINE/WhatsApp*
+PIPELINE/test*.png
+
+# Pipeline output dirs not needed for inference
+diabetes_pipeline_outputs/09_*
+diabetes_pipeline_outputs/13_*
+diabetes_pipeline_outputs/14_*
+
+# Large output files inside dirs we still partially need
+diabetes_pipeline_outputs/10_hybrid_image_features/*.png
+diabetes_pipeline_outputs/10_hybrid_image_features/*.csv
+diabetes_pipeline_outputs/10_hybrid_image_features/*.txt
+diabetes_pipeline_outputs/10_hybrid_image_features/10_qc_feature_columns.json
+
+diabetes_pipeline_outputs/11_hybrid_probability_fusion/*.png
+diabetes_pipeline_outputs/11_hybrid_probability_fusion/*.csv
+diabetes_pipeline_outputs/11_hybrid_probability_fusion/*.txt
+
+diabetes_pipeline_outputs/05_segmented_training_lighting_robust/last_*
+
+# Keep only the best segmentation checkpoint
+Segmentation_Dataset/Segmentation_Branch_Outputs/05_training_runs/checkpoints/last_*
