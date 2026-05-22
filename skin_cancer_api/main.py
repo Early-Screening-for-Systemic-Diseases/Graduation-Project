@@ -7,6 +7,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from PIL import Image
 
+import os
+
 from pipeline import load_model, run_inference
 
 _model: nn.Module | None = None
@@ -59,3 +61,9 @@ async def predict(file: UploadFile = File(...)):
         raise HTTPException(status_code=500, detail=f"Inference error: {str(e)}")
 
     return JSONResponse(content=result)
+
+
+if __name__ == "__main__":
+    import uvicorn
+    port = int(os.environ.get("PORT", 8000))
+    uvicorn.run("main:app", host="0.0.0.0", port=port)
