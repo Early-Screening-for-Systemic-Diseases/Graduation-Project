@@ -1,0 +1,23 @@
+# NLP Disease Prediction Pipeline - nlpv2
+# Install: pip install -r requirements.txt
+# Then run: python -m spacy download en_core_web_sm
+
+# Core NLP
+spacy>=3.0
+negspacy
+contractions
+
+# Transformer models
+transformers>=4.20
+torch>=1.13
+sentence-transformers
+
+# Data & evaluation
+pandas
+numpy
+scikit-learn
+
+# API & Web Server
+fastapi
+uvicorn
+pydantic
