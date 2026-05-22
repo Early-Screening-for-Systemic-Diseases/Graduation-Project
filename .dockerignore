@@ -1,0 +1,40 @@
+.git
+.gitignore
+*.ipynb
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.env
+.venv
+
+# Raw data and CSV manifests not needed at runtime
+ISIC_2019_Training_GroundTruth.csv
+ISIC_2019_Training_Metadata.csv
+real_images/
+ABDO.jpeg
+
+# Pipeline output dirs not needed for inference
+pipe output/audit_reports/
+pipe output/duplicate_review/
+pipe output/manifests/
+pipe output/preprocessing/
+pipe output/pytorch_binary_2phase_error_analysis/
+pipe output/pytorch_binary_2phase_evaluation/
+pipe output/pytorch_dataset/
+pipe output/pytorch_evaluation/
+pipe output/pytorch_explainability/
+pipe output/pytorch_training/
+pipe output/real_image_binary_inference_gradcam/
+pipe output/reconciliation_reports/
+pipe output/splits/
+pipe output/binary_2phase_app_contract/
+pipe output/00_config/
+pipe output/01_reconciliation/
+pipe output/02_audit_review/
+
+# Keep only the best 2phase model, discard the rest
+pipe output/pytorch_training_binary_2phase/last_model_binary_2phase.pt
+pipe output/pytorch_training_binary_2phase/training_curves_binary_2phase.png
+pipe output/pytorch_training_binary_2phase/training_history_binary_2phase.csv
+pipe output/pytorch_training_binary_2phase/binary_2phase_training_summary.csv
