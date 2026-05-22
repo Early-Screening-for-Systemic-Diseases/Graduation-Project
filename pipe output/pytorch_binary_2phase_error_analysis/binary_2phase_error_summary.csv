@@ -1,0 +1,2 @@
+threshold_name,threshold,total_test_rows,total_cancer_risk,total_non_cancer,TP,TN,FP,FN,cancer_recall,specificity,false_negatives,false_positives,missed_mel,missed_bcc,hc_false_negatives,hc_false_positives,gradcam_deferred_to,training_performed,images_modified
+youden_j,0.4219,3045,1151,1894,976,1608,286,175,0.84796,0.849,175,286,148,27,30,30,14_real_image_binary_inference_gradcam.ipynb,False,False

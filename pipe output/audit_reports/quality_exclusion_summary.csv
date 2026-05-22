@@ -1,0 +1,2 @@
+source_manifest,output_manifest,source_row_count,dropped_row_count,output_row_count,NV_count,MEL_count,BCC_count
+training_eligible_manifest_post_metadata.csv,training_eligible_manifest_post_quality.csv,20513,124,20389,12708,4430,3251

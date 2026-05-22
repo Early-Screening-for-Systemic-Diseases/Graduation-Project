@@ -1,0 +1,25 @@
+{
+  "raw_dataset_root": "D:\\SKIN CANCER v2\\DS",
+  "class_dirs": {
+    "NV": "D:\\SKIN CANCER v2\\DS\\NV",
+    "MEL": "D:\\SKIN CANCER v2\\DS\\MEL",
+    "BCC": "D:\\SKIN CANCER v2\\DS\\BCC"
+  },
+  "ground_truth_csv": "D:\\SKIN CANCER v2\\DS\\ISIC_2019_Training_GroundTruth.csv",
+  "metadata_csv": "D:\\SKIN CANCER v2\\DS\\ISIC_2019_Training_Metadata.csv",
+  "final_dataset_root": "D:\\SKIN CANCER v2\\final DS",
+  "output_root": "D:\\SKIN CANCER v2\\pipe output",
+  "class_mapping": {
+    "NV": 0,
+    "MEL": 1,
+    "BCC": 2
+  },
+  "allowed_extensions": [
+    ".jpeg",
+    ".jpg",
+    ".png"
+  ],
+  "approved_suffixes": [
+    "_downsampled"
+  ]
+}

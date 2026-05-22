@@ -1,0 +1,2 @@
+image_source,total_images,processed_ok,failed,gradcam_overlays,lower_risk_count,moderate_risk_count,higher_risk_count,model_checkpoint,youden_threshold,training_performed,images_modified
+C:\SKIN CANCER v2\real_images,4,4,0,4,1,0,3,best_model_binary_2phase.pt,0.4219,False,False

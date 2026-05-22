@@ -1,0 +1,13 @@
+field_name,class_label,class_total,non_missing_count,missing_count,missing_pct
+age_approx,NV,12851,12544,307,2.39
+sex,NV,12851,12590,261,2.03
+anatom_site_general,NV,12851,10768,2083,16.21
+lesion_id,NV,12851,11303,1548,12.05
+age_approx,MEL,4504,4419,85,1.89
+sex,MEL,4504,4423,81,1.8
+anatom_site_general,MEL,4504,4377,127,2.82
+lesion_id,MEL,4504,4167,337,7.48
+age_approx,BCC,3309,3303,6,0.18
+sex,BCC,3309,3303,6,0.18
+anatom_site_general,BCC,3309,3241,68,2.06
+lesion_id,BCC,3309,3309,0,0.0

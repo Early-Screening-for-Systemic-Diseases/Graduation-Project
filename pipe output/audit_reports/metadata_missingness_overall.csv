@@ -1,0 +1,5 @@
+field_name,total_rows,non_missing_count,missing_count,missing_pct
+age_approx,20664,20266,398,1.93
+sex,20664,20316,348,1.68
+anatom_site_general,20664,18386,2278,11.02
+lesion_id,20664,18779,1885,9.12

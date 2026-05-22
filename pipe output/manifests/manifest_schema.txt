@@ -1,0 +1,29 @@
+Manifest Schema (v2)
+
+full_path                  : Absolute file path.
+folder_name                : Folder where discovered (NV, MEL, BCC).
+file_name_with_extension   : Original filename.
+file_stem_raw              : Filename without extension.
+extension                  : File extension.
+base_id_candidate          : Base ID after suffix normalization.
+recognized_suffix          : Detected suffix e.g. _downsampled.
+canonical_match_id         : ID matched to ground truth CSV.
+folder_label               : Provisional label from folder.
+gt_label                   : Authoritative label from GT CSV.
+final_authoritative_label  : Final label for pipeline (NV/MEL/BCC).
+match_status               : matched_exact | matched_via_suffix_rule | unmatched.
+label_agreement_status     : agree | disagree | missing_ground_truth.
+age_approx                 : Audit/split-support only. Not model input.
+sex                        : Audit/split-support only. Not model input.
+anatom_site_general        : Audit/split-support only. Not model input.
+lesion_id                  : Split-support only. Not model input.
+metadata_row_found         : Boolean metadata match.
+family_id                  : Duplicate-family group identifier.
+duplicate_hash_group       : Hash-based exact duplicate group.
+final_dataset_status       : eligible | flagged_for_review | excluded.
+final_exclusion_reason     : none | duplicate_family_pending_review.
+eligible_for_training      : Boolean.
+eligible_for_split         : Boolean.
+
+Rule: downstream stages must use training_eligible_manifest.csv.
+Do not re-infer dataset state by rescanning folders.

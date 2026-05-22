@@ -1,0 +1,28 @@
+{
+  "model": "efficientnet_b0",
+  "label_mode": "multiclass",
+  "n_classes": 3,
+  "class_names": [
+    "NV",
+    "MEL",
+    "BCC"
+  ],
+  "img_size": 224,
+  "batch_size": 32,
+  "epochs_run": 14,
+  "epochs_max": 20,
+  "lr": 0.0001,
+  "weight_decay": 0.0001,
+  "early_stop_patience": 5,
+  "optimizer": "AdamW",
+  "scheduler": "ReduceLROnPlateau",
+  "class_weights_NV": 0.5351,
+  "class_weights_MEL": 1.51951,
+  "class_weights_BCC": 2.11386,
+  "best_epoch": 9,
+  "best_val_macro_f1": 0.81688,
+  "best_val_loss": 0.44742,
+  "device": "cuda",
+  "gpu_name": "NVIDIA GeForce RTX 4060 Ti",
+  "random_seed": 42
+}

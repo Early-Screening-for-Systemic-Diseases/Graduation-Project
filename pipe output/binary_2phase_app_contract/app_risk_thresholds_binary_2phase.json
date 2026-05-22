@@ -1,0 +1,26 @@
+{
+  "main_action_threshold": {
+    "name": "youden_j",
+    "value": 0.4219,
+    "description": "Maximises Youden J (sensitivity + specificity - 1) on validation set.",
+    "effect": "Balances cancer recall and specificity.",
+    "test_cancer_recall": 0.84796,
+    "test_specificity": 0.849,
+    "test_cancer_f1": 0.80895,
+    "missed_cancer_test": 175
+  },
+  "caution_boundary": {
+    "name": "high_recall",
+    "value": 0.17,
+    "description": "Highest threshold on validation achieving >= 90% cancer recall.",
+    "effect": "Fewer missed cancers, more false positives.",
+    "test_cancer_recall": 0.92007,
+    "test_specificity": 0.717,
+    "test_cancer_f1": 0.7713,
+    "missed_cancer_test": 92
+  },
+  "risk_level_boundaries": {
+    "lower_to_moderate": 0.17,
+    "moderate_to_higher": 0.4219
+  }
+}

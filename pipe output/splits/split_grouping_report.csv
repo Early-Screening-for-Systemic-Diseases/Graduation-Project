@@ -1,0 +1,4 @@
+split_assignment,family_id,lesion_id
+test,257,2788
+train,1225,13107
+val,251,2761

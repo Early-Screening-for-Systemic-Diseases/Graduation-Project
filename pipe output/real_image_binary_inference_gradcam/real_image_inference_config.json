@@ -1,0 +1,27 @@
+{
+  "model_version": "binary_2phase_v1",
+  "checkpoint": "best_model_binary_2phase.pt",
+  "checkpoint_epoch": 17,
+  "checkpoint_phase": "phase2_finetune",
+  "image_source": "C:\\SKIN CANCER v2\\real_images",
+  "total_images": 4,
+  "processed_ok": 4,
+  "failed": [],
+  "youden_threshold": 0.4219,
+  "high_recall_threshold": 0.17,
+  "risk_levels": {
+    "lower": "probability < 0.17",
+    "moderate": "0.17 <= probability < 0.4219",
+    "higher": "probability >= 0.4219"
+  },
+  "gradcam_target_layer": "model.features[8] (last ConvBnAct block)",
+  "transform": [
+    "Resize(256)",
+    "CenterCrop(224)",
+    "ToTensor()",
+    "Normalize(ImageNet)"
+  ],
+  "training_performed": false,
+  "images_modified": false,
+  "disclaimer": "This output is for demonstration/screening support only and is not a diagnosis. Real external images may be out-of-distribution compared with the training dataset."
+}

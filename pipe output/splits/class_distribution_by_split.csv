@@ -1,0 +1,4 @@
+split_assignment,BCC,MEL,NV
+test,512,639,1894
+train,2260,3144,8928
+val,479,647,1886

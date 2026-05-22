@@ -1,0 +1,4 @@
+split,row_count,expected_rows,NV,MEL,BCC,non_cancer,cancer_risk,missing_file_count,unreadable_sample,duplicate_path_count
+train,14332,14332,8928,3144,2260,8928,5404,0,0,0
+val,3012,3012,1886,647,479,1886,1126,0,0,0
+test,3045,3045,1894,639,512,1894,1151,0,0,0

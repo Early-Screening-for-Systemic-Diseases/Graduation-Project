@@ -1,0 +1,16 @@
+metric,value
+scanned_NV,12875
+scanned_MEL,4522
+scanned_BCC,3323
+scanned_total,20720
+ground_truth_rows_total,25331
+ground_truth_rows_invalid,4611
+matched_exact,20720
+matched_via_suffix_rule,0
+unmatched_ground_truth,0
+ambiguous_match,0
+label_disagreements,0
+eligible_total,20720
+eligible_NV,12875
+eligible_MEL,4522
+eligible_BCC,3323

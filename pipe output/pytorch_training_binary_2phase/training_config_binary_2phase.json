@@ -1,0 +1,56 @@
+{
+  "model": "efficientnet_b0",
+  "label_mode": "binary",
+  "n_classes": 2,
+  "binary_names": [
+    "non_cancer",
+    "cancer_risk"
+  ],
+  "binary_mapping": {
+    "NV": 0,
+    "MEL": 1,
+    "BCC": 1
+  },
+  "img_size": 224,
+  "batch_size": 32,
+  "weight_decay": 0.0001,
+  "early_stop_patience": 5,
+  "optimizer": "AdamW",
+  "scheduler": "ReduceLROnPlateau(mode=max, factor=0.5, patience=2)",
+  "random_seed": 42,
+  "phase1": {
+    "description": "head-only warm-up (backbone frozen)",
+    "frozen_blocks": "features[0-8] (all)",
+    "trainable": "classifier only",
+    "lr": 0.001,
+    "max_epochs": 10,
+    "epochs_run": 10,
+    "trainable_params": 2562,
+    "non_trainable_params": 4007548
+  },
+  "phase2": {
+    "description": "upper-backbone fine-tuning",
+    "frozen_blocks": "features[0-4]",
+    "trainable": "features[5-8] + classifier",
+    "lr": 0.0001,
+    "max_epochs": 20,
+    "epochs_run": 12,
+    "trainable_params": 3701450,
+    "non_trainable_params": 308660
+  },
+  "class_weight_non_cancer": 0.80264,
+  "class_weight_cancer_risk": 1.32605,
+  "best_epoch": 17,
+  "best_phase": "phase2_finetune",
+  "best_val_pr_auc": 0.90232,
+  "best_val_roc_auc": 0.92955,
+  "best_val_recall_cancer": 0.81528,
+  "best_val_precision_cancer": 0.80245,
+  "best_val_f1_cancer": 0.80881,
+  "best_val_loss": 0.35803,
+  "device": "cuda",
+  "gpu_name": "NVIDIA GeForce RTX 4060 Laptop GPU",
+  "test_set_used": false,
+  "images_modified": false,
+  "manifests_modified": false
+}

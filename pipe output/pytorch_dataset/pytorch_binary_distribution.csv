@@ -1,0 +1,4 @@
+split,non_cancer,cancer_risk,total
+train,8928,5404,14332
+val,1886,1126,3012
+test,1894,1151,3045

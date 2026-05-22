@@ -1,0 +1,2 @@
+model,best_epoch,best_phase,best_val_pr_auc,best_val_roc_auc,best_val_recall_cancer,best_val_precision_cancer,best_val_f1_cancer,best_val_loss,phase1_epochs_run,phase2_epochs_run,total_epochs_run,device,gpu_name,test_set_used
+binary_2phase,17,phase2_finetune,0.90232,0.92955,0.81528,0.80245,0.80881,0.35803,10,12,22,cuda,NVIDIA GeForce RTX 4060 Laptop GPU,False

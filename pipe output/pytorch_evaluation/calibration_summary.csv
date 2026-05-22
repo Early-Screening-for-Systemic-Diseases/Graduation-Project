@@ -1,0 +1,5 @@
+model,metric,value
+binary,ECE,0.05821
+multiclass,ECE_NV,0.08849
+multiclass,ECE_MEL,0.08364
+multiclass,ECE_BCC,0.02946

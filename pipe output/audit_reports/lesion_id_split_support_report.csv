@@ -1,0 +1,2 @@
+total_rows,rows_with_lesion_id,rows_without_lesion_id,pct_rows_with_lesion_id,unique_lesion_ids,lesion_ids_with_multiple_images
+20664,18779,1885,90.88,9735,3942

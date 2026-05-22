@@ -1,0 +1,5 @@
+field_name,usability_class,use_for_audit,use_for_reporting,use_for_split_support,use_for_bias_analysis,use_for_model_input_v1,notes
+age_approx,usable_for_audit,True,True,False,True,False,Derived from observed missingness.
+sex,usable_for_audit,True,True,False,True,False,Derived from observed missingness.
+anatom_site_general,usable_for_audit,True,True,False,True,False,Derived from observed missingness.
+lesion_id,usable_for_split_support,True,True,True,False,False,Derived from observed missingness.
