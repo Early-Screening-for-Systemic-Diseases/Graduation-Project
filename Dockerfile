@@ -16,6 +16,8 @@ COPY ["pipe output/pytorch_training_binary_2phase/best_model_binary_2phase.pt", 
 
 WORKDIR /app/skin_cancer_api
 
+RUN chmod +x start.sh
+
 EXPOSE 8000
 
-CMD uvicorn main:app --host 0.0.0.0 --port $PORT
+CMD ["./start.sh"]
