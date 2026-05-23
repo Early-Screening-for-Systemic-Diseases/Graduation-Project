@@ -1,0 +1,22 @@
+Symptom,Type
+Fatigue,SENSATION
+Weakness,SENSATION
+Lethargy,NEURO/BEHAVIORAL
+Restlessness,NEURO/BEHAVIORAL
+Decreased exercise tolerance,FUNCTIONAL
+Shortness of breath,RESPIRATORY
+Rapid or irregular heartbeats,FUNCTIONAL
+Prolonged bleeding,HEMATOLOGICAL
+Bruising,HEMATOLOGICAL
+Pale skin,HEMATOLOGICAL
+Jaundice,DERMATOLOGICAL
+Irregular sugar level,METABOLIC
+Excessive hunger,METABOLIC
+Increased thirst,METABOLIC
+Polyuria,METABOLIC
+Frequent urination,METABOLIC
+Frequent infections,METABOLIC
+Weight loss,WEIGHT/APPETITE
+Obesity,WEIGHT/APPETITE
+Blurred and distorted vision,VISION
+Slow healing of wounds,FUNCTIONAL

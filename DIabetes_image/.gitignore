@@ -1,0 +1,2 @@
+# Ignore PyTorch model
+best_model_finetuned.pt
